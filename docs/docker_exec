@@ -1,0 +1,33 @@
+[1 => 구동 명령어 공부]
+
+docker run 
+	-it 
+	--rm 
+	--cap-add SYS_PTRACE 
+	--security-opt seccomp:unconfined 
+	--name 16.04 
+	-v ${PWD}/study:/study leepwn:16.04 /usr/bin/zsh
+
+-it : 명령어를 대화형으로 실행, 터미널(tty)를 할당
+--rm : 컨테이너가 종료될 때 해당 컨테이너를 자동으로 삭제 
+       컨테이너가 종료되면 관련 데이터가 자동 정리
+--cap-add SYS_PTRACE : SYS_PTRACE라는 리눅스 capability가 추가
+					   프로세스 추적과 관련된 권한을 부여
+--security-opt seccomp:unconfined
+	: Seccomp 프로파일을 설정하는데, unconfined로 설정되어있어야 사용안함
+	  Seccomp은 컨테이너에서 사용 가능한 시스템 호출을 제한하는 보안 기능 중 하나
+--name 16.04 : 실행중인 컨테이너에 이름을 부여
+
+-v ${PWD}/study:/study
+	: 호스트의 '${PWD}/study' 디렉토리 -> 컨테이너의 /study경로로 사용
+
+leepwn:16.04 : 실행할 docker 이미지의 이름과 태그를 지정
+/usr/bin/zsh : 내부에서 실행할 명령을 지정
+
+(실험하거나 공부해야할 부분)
+1. --rm => 컨테이너가 종료되면 완전 삭제
+(위험부담 : 실수로 종료됬을때 내부 데이터 완전 날라감)
+2. 우분투 capability
+SYS_PTRACE를 왜 설정하고 사용해야하는가?
+3. Seccomp보안기법
+4. study폴더 -> 난 data폴더로 변경

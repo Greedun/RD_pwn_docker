@@ -1,0 +1,36 @@
+[Dockerfile 명령어 모음]
+FROM : 베이스가 될 이미지:태그 선택
+ARG : docker빌드 중에 전달되는 빌드 인수를 정의
+		ex) 동적으로 이미지를 빌드할 때 변수를 전달
+```
+ARG VERSION=latest
+FROM ubuntu:$VERSION
+```
+ENV : 환경변수를 설정 / 컨테이너 내에서 사용할 환경 변수를 정의
+RUN : 컨테이너 내에서 실행할 명령어를 지정 / 
+		주로 패키지 설치, 소스코드 빌드 , 파일 다운로드등에 사용
+# : 주석
+EXPOSE : 이 도커 이미지는 해당 포트를 외부에 공개할 예정이다 명시
+(컨테이너 포트)
+
+===
+
+# 기본 
+도커 기본적인 네트워크 NAT 환경
+
+# 16.04
+ARG DEBIAN_FRONTEND=noninteractive
+=> 이거를 안쓰고 빌드하면 어떻게 되나?
+=> 검색하니까 많네, 조사하고 적용하면 될듯
+
+RUN dpkg --add-architecture i386
+RUN apt update
+RUN apt install libc6:i386 -y
+=> 16.04버전에서 이걸 이용하는 이유는 무엇일까?
+
+# 공부할점?
+docker run -p와 dockerfile의 EXPOSE의 차이점
+https://soft.plusblog.co.kr/139
+
+cmd , entrypoint 차이점
+https://bluese05.tistory.com/77

@@ -1,2 +1,86 @@
 1. docker 쉘스크립트 버전으로 짜기
 - 쉘 스크립트로 사용자 입력 받기 가능?
+=> dockerfile로 이미지 만든 후 가동하는 스크립트 였음
+
+2. dockerfile을 구축해서 이미지를 만드는 것을 구상해야함
+
+(gdb설치시 참고링크)
+https://github.com/apogiatzis/gdb-peda-pwndbg-gef
+=> all
+
+=> 기본 베이스가 되는 내용은 거의 추가 완료(16버전)
+
+
+(난 ssh, 웹 포트1,2개는 반드시 포트포워딩으로 열어놔야함)
+EXPOSE 22 / flask , web
+
+(사용자 유저 추가)
+https://yongho1037.tistory.com/720
+
+(잠깐 test)
+docker run -it --rm --cap-add SYS_PTRACE --security-opt seccomp:unconfined --name rd_16.04 -v ${PWD}/data:/data rd_pwn:16.04 /usr/bin/zsh
+=> 이 명령어로 root로 접근 / user로 바꾼후 sudo su 해도 작동 잘함
+
+(+) 문제사항 - ubuntu 16버전에서는 파이썬 버전이 낮아서 gdb-pwndbg, gdb-gef가 format string이 동작을 안해서 문법 에러 발생
+-> F-string이 없는 버전으로 코드를 강제로 맞춰야함
+=> 생각한 해결법 : 수정된 파일을 컨테이너에 넣어서 해당 파일을 덮어버리는 방식
+-> f-string 다 패치하려고 했는데 너무 많음 .....
+https://fnhid.tistory.com/55
+그래서 블로그에서 찾은 방법으로 이전 버전의 gef.py를 가져와서 덮는 방법을 하고자 한다.
+
+(1) gef시도
+=> https://fnhid.tistory.com/55
+(2) pwndbg시도
+=> https://haerinn.tistory.com/57
+https://maro5397.tistory.com/3
+(결론)
+install.sh gdbinit setup.sh의 코드 변경 진행
+
+(entrypoint?)
+
+(도커이미지 빌드 명령어 명시)
+# docker build --tag {imagename}:{tagnum} .
+# docker build --tag rd_pwn:16.04 .
+
+===
+
+(현태꺼)
+# Dockerfile_for_pwn_setting
+---
+- Updated to suit me on 12/06, 2023.
+- Dockerfile for pwnable
+- change apt server to kakao
+- include
+  - tmux
+  - oh-my-zsh
+  - pwntools
+  - ROPgadget
+  - one_gadget
+  - seccomp_tools
+    - 18.04, 20.04, 22.04
+  - gef
+    - 16.04
+  - pwndbg
+    - 18.04, 20.04, 22.04
+  - patchelf
+    - 16.04, 18.04
+  - pwninit
+    - 20.04, 22.04
+```
+docker build --tag {imagename}:{tagnum} .
+docker run -it --name {version} -v $PWD/{shareddir}:/{containerdir} {imagename:tagnum} usr/bin/zsh
+```
+=> (24.01.02) 일단 16.04까지 pwndbg뺴고는 완료
+
+
+
+3. 다시 1,2번을 조합하여 상황 조정
+
+
+===
+
+(알게된점)
+f-string 뒤에 : => 포맷 명세 미니 언어
+https://soypablo.tistory.com/entry/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD%EC%97%90%EC%84%9C-%EA%B0%80%EC%9E%A5-%EC%9E%90%EC%84%B8%ED%95%9C-f-string-%EA%B0%80%EC%9D%B4%EB%93%9C
+https://bluese05.tistory.com/70
+
