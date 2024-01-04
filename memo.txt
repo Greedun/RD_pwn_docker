@@ -71,10 +71,22 @@ docker build --tag {imagename}:{tagnum} .
 docker run -it --name {version} -v $PWD/{shareddir}:/{containerdir} {imagename:tagnum} usr/bin/zsh
 ```
 => (24.01.02) 일단 16.04까지 pwndbg뺴고는 완료
-
+(24.01.03) 18.04버전 완료하고 다른 버전 복붙 완료
+-> (문제사항) 16.04까지는 gdb명령어 작동 잘되었는데
+18.04버전 다시 하려니까 안됨
 
 
 3. 다시 1,2번을 조합하여 상황 조정
+(dockerfile 추가 변경)
+- 유저 변경
+- 로컬 파일 복사
+- 처음 도착하는 위치 변경
+
+(외부)
+- ubuntu별로 glibc버전을 run.sh나 readme파일에 명시 할것
+- 버전을 세로 나열로 변경
+
+4. 제작한 스크립트를 기반으로 메뉴얼 작성이 해야함
 
 
 ===
