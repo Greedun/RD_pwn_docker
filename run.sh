@@ -2,7 +2,7 @@
 
 # 1. 작성된 우분투 태그 나열
 #(!)변수랑 = 사이에 공간이 있으면 안됨
-list_tag=("16.04" "18.04" "20.04" "22.04" "23.04" "23.10" "24.04")
+list_tag=("16.04" "18.04" "20.04" "22.04" "23.04" "23.10" "24.04" "latest")
 
 echo "[작성된 rd_pwn 태그들]"
 for tag in "${list_tag[@]}"; do
@@ -41,5 +41,9 @@ case "$input_tag" in
 		;;
 	"24.04")
 		docker run -it --rm --cap-add SYS_PTRACE --security-opt seccomp:unconfined --name 24.04 -v ${PWD}/../data:/data rd_pwn:24.04 /usr/bin/zsh
+		;;
+	"latest")
+		docker build --tag rd_pwn:latest ./latest
+		docker run -it --rm --cap-add SYS_PTRACE --security-opt seccomp:unconfined --name latest -v ${PWD}/../data:/data rd_pwn:latest /usr/bin/zsh
 		;;
 esac
