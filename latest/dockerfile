@@ -9,6 +9,9 @@ ENV TZ Asia/Seoul
 ENV PYTHONIOENCODING UTF-8
 ENV LC_CTYPE C.UTF-8
 
+#ENV user user
+#ENV LD_PRELOAD='/libc.so.6'
+
 EXPOSE 22 5000 80
 
 COPY gdbinit /data/gdbinit
@@ -109,6 +112,22 @@ RUN echo "syntax on\\nfiletype indent plugin on\\nlet python_version_2=1\\nlet p
 WORKDIR /home/user
 
 # 로컬 파일 복사
+COPY ./deploy/flag_diablo /home/user/flag
+COPY ./deploy/lor /home/user/prob
+# 사용시 위에 LD_PRELOAD의 주석을 해제할 것
+#COPY ./deploy/libc.so.6 /libc.so.6
 
+# chown명령어에 대해서 조사한 이후에 도입할 것
+RUN sudo chown -R root:user /home/user
+RUN sudo chown root:user /home/user/flag
+RUN sudo chown root:user /home/user/prob
 
+RUN sudo chmod 755 /home/user/prob
+RUN sudo chmod 440 /home/user/flag
 
+WORKDIR /home/user
+USER user
+
+# 문제 실행할 포트 열때 사용
+#EXPOSE 6666
+#CMD socat TCP-LISTEN:6666,reuseaddr,fork EXEC:/home/user/prob

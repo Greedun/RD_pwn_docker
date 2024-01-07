@@ -59,6 +59,8 @@ RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y ruby2.4
 RUN gem install one_gadget
 
+WORKDIR /
+
 # shell - zsh구성
 RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
 RUN mkdir -p "$HOME/.zsh"
@@ -93,5 +95,10 @@ RUN adduser --disabled-password --gecos "" user  \
     && adduser user sudo \
     && echo 'user ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
+# 유저 변경(user)
 
+# 로컬 파일 복사
+
+# 처음 도착하는 위치 /home/user
+WORKDIR /
 
